@@ -119,7 +119,6 @@ func parseTags(field *ast.Field, tags []*TagOpt) string {
 	for _, tag := range tags {
 		var value string
 		existingTagReg := regexp.MustCompile(fmt.Sprintf("%s:\"[^\"]+\"", tag.Tag))
-		fmt.Println(tag)
 		existingTag := existingTagReg.FindString(field.Tag.Value)
 		if existingTag == "" {
 			tgs := strings.SplitN(tag.Case, `.`, 2)
