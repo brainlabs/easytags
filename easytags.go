@@ -45,8 +45,6 @@ func main() {
 		return
 	}
 
-	fmt.Println(len(args))
-
 	if len(args) == 2 {
 		provided := strings.Split(args[1], ",")
 		for _, e := range provided {
