@@ -1,1 +1,1 @@
-module github.com/betacraft/easytags
+module github.com/brainlabs/easytags
