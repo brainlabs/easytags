@@ -14,7 +14,7 @@ func TestGenerateTags(t *testing.T) {
 		t.Errorf("Error reading file %v", err)
 	}
 	defer ioutil.WriteFile("testfile.go", testCode, 0644)
-	GenerateTags("testfile.go", []*TagOpt{&TagOpt{"json", "snake"}}, false)
+	GenerateTags("testfile.go", []*TagOpt{&TagOpt{"json", "camel"}}, false)
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, "testfile.go", nil, parser.ParseComments)
 	if err != nil {
@@ -76,7 +76,7 @@ func TestGenerateTags_Multiple(t *testing.T) {
 		t.Errorf("Error reading file %v", err)
 	}
 	defer ioutil.WriteFile("testfile.go", testCode, 0644)
-	GenerateTags("testfile.go", []*TagOpt{&TagOpt{"json", "snake"}, &TagOpt{"xml", "snake"}}, false)
+	GenerateTags("testfile.go", []*TagOpt{&TagOpt{"json", "snake|omitempty"}, &TagOpt{"xml", "snake"}}, false)
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, "testfile.go", nil, parser.ParseComments)
 	if err != nil {
