@@ -43,7 +43,11 @@ func main() {
 	if len(args) < 1 {
 		fmt.Println(cmdUsage)
 		return
-	} else if len(args) == 2 {
+	}
+
+	fmt.Println(len(args))
+
+	if len(args) == 2 {
 		provided := strings.Split(args[1], ",")
 		for _, e := range provided {
 			t := strings.SplitN(strings.TrimSpace(e), ":", 2)
@@ -55,9 +59,11 @@ func main() {
 		}
 	}
 
+
 	if len(tags) == 0 && *remove == false {
 		tags = append(tags, &TagOpt{defaultTag, defaultCase})
 	}
+
 	for _, arg := range args {
 		files, err := filepath.Glob(arg)
 		if err != nil {
@@ -115,19 +121,27 @@ func parseTags(field *ast.Field, tags []*TagOpt) string {
 	for _, tag := range tags {
 		var value string
 		existingTagReg := regexp.MustCompile(fmt.Sprintf("%s:\"[^\"]+\"", tag.Tag))
+		fmt.Println(tag)
 		existingTag := existingTagReg.FindString(field.Tag.Value)
 		if existingTag == "" {
-			var name string
-			switch tag.Case {
-			case "snake":
-				name = ToSnake(fieldName)
-			case "camel":
-				name = ToCamel(fieldName)
-			case "pascal":
-				name = fieldName
-			default:
-				fmt.Printf("Unknown case option %s", tag.Case)
+			tgs := strings.SplitN(tag.Case, `.`, 2)
+			omitEmpty := ``
+			if len(tgs) == 2 {
+				omitEmpty = tgs[1]
 			}
+
+			var name string
+			switch tgs[0] {
+			case "snake":
+				name = WithOmitEmpty(ToSnake(fieldName), omitEmpty)
+			case "camel":
+				name = WithOmitEmpty(ToCamel(fieldName), omitEmpty)
+			case "pascal":
+				name = WithOmitEmpty(fieldName, omitEmpty)
+			default:
+				fmt.Printf("Unknown case option %s", tgs[0])
+			}
+
 			value = fmt.Sprintf("%s:\"%s\"", tag.Tag, name)
 			tagValues = append(tagValues, value)
 		}
@@ -203,4 +217,12 @@ func ToCamel(in string) string {
 		runes[i] = unicode.ToUpper(runes[i])
 	}
 	return string(runes)
+}
+
+func WithOmitEmpty(fieldName, omitempty string) string {
+	if strings.Trim(omitempty, ` `) == `omitempty` {
+		return fmt.Sprintf(`%s,omitempty`, fieldName)
+	}
+
+	return fieldName
 }
