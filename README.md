@@ -15,8 +15,10 @@ You can also use this with go generate
 For example - In your source file, write following line
 
 > go:generate easytags $GOFILE json,xml,sql
+
 using with omitempty
 > go:generate easytags $GOFILE json:omitempty,xml,sql
+
 or 
 > go:generate easytags $GOFILE json:camel.omitempty,xml,sql
 
