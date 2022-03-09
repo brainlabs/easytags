@@ -1,9 +1,9 @@
 package main
 
 type TestStruct struct {
-	Field1     int `json:"-"`
-	TestField2 string
-	ExistingTag string `custom:"" json:"etag"`
+	Field1      int
+	TestField2  string
+	ExistingTag string
 	Embed
 }
 

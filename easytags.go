@@ -41,7 +41,6 @@ func main() {
 	var tags []*TagOpt
 
 	if len(args) < 1 {
-		fmt.Println(cmdUsage)
 		return
 	}
 
@@ -57,7 +56,6 @@ func main() {
 		}
 	}
 
-
 	if len(tags) == 0 && *remove == false {
 		tags = append(tags, &TagOpt{defaultTag, defaultCase})
 	}
@@ -69,6 +67,7 @@ func main() {
 			os.Exit(1)
 			return
 		}
+
 		for _, f := range files {
 			GenerateTags(f, tags, *remove)
 		}
@@ -107,7 +106,7 @@ func GenerateTags(fileName string, tags []*TagOpt, remove bool) {
 	w := bufio.NewWriter(write)
 	err = format.Node(w, fset, f)
 	if err != nil {
-		fmt.Printf("Error formating file %s", err)
+		fmt.Printf("Error formating file %v", err)
 		return
 	}
 	w.Flush()
@@ -135,6 +134,8 @@ func parseTags(field *ast.Field, tags []*TagOpt) string {
 				name = WithOmitEmpty(ToCamel(fieldName), omitEmpty)
 			case "pascal":
 				name = WithOmitEmpty(fieldName, omitEmpty)
+			case "omitempty":
+				name = WithOmitEmpty(ToSnake(fieldName), "omitempty")
 			default:
 				fmt.Printf("Unknown case option %s", tgs[0])
 			}
